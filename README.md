@@ -4,10 +4,12 @@ A grounded, co-op, first-person life simulation with a real player economy. See
 **[GAME_DESIGN.md](GAME_DESIGN.md)** for the full design and **PHASE0–5.md** for
 each build phase.
 
-## What's playable now (Phases 0–5, single-player)
+## What's playable now (Phases 0–7, single-player)
 Create a character → spawn into a small town of AI villagers → live an ordinary
 life: work or **craft & sell** for Coins, **eat / sleep / pay rent**, and **build
-relationships** (friendship → romance) with villagers who live their own lives.
+relationships** (friendship → romance) with villagers who live their own lives. Visit
+the **Bank** to try the Phase 7 buy/cash-out flow (**sandbox — no real money**). Co-op
+(Phase 6) and the real-money layer (Phase 7) are described in their phase docs.
 
 > ⚠️ **Status: written but not yet run.** All code below was authored without a
 > Unity install on the dev machine. This guide is about getting it running and
@@ -82,11 +84,11 @@ Assets/_Project/Scripts/
   Interaction/ Interactable + Bed/Food/Work/Craft/Market/Npc interactables
   AI/          utility-AI villagers (NpcBrain, actions, mover)
   Social/      relationships, characters, social graph
-  Economy/     Wallet, Inventory, ItemCatalog, SellerProfile
+  Economy/     Wallet (dual-currency), Inventory, ItemCatalog, SellerProfile, RealMoney/ (Phase 7 sandbox)
   World/       world builders (TownWorld, ApartmentWorld, CoopWorld) + shared helpers
   Net/         Phase 6 co-op (opt-in, #if SIMCITY_NETCODE): Relay/Lobby, networked player/NPC/clock
   UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen
-GAME_DESIGN.md · PHASE0.md … PHASE6.md
+GAME_DESIGN.md · PHASE0.md … PHASE7.md
 ```
 
 ## Phase 6 — Co-op multiplayer (written; opt-in)
@@ -96,6 +98,13 @@ single-player with zero netcode setup. Turn it on (packages + the `SIMCITY_NETCO
 per **[PHASE6.md](PHASE6.md)**. Still a big complexity jump — validate the single-player
 slice above first.
 
-## Next: Phase 7 — Real-money layer
-Backend wallet, payments provider, cash-out of earned Coins, KYC/compliance — its own
-track with legal review (see `GAME_DESIGN.md` §6.3).
+## Phase 7 — Real-money layer (written; **sandbox**)
+Dual-currency wallet (earned-by-selling = cashable; purchased/granted = not) with the
+buy → verify → cash-out flow and all the compliance gates (KYC, age, threshold, holding
+period, earned-only) enforced in code. **No real money moves** — the only payments
+provider is a mock; there's no backend, real KYC, or provider integration, and going
+live needs legal review. Walk to the **Bank** to try it. See **[PHASE7.md](PHASE7.md)**.
+
+## Next: Phase 8 — Realistic art & game feel
+Scalable-realism art pass (PBR, baked GI, LODs), character art/animation, audio, real
+UGUI/Canvas UI, mobile controls, tutorial, balancing (see `GAME_DESIGN.md` §12).

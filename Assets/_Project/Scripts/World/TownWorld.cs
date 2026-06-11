@@ -76,6 +76,10 @@ namespace Simcity.World
             WorldCommon.CreateBox("Market", new Vector3(-5.5f, 1f, -2f), new Vector3(2.4f, 2f, 1.4f),
                 new Color(0.3f, 0.6f, 0.5f)).AddComponent<MarketInteractable>().prompt = "Sell goods";
 
+            // Bank: the (web) money portal — buy Coins / cash out earned Coins (Phase 7, sandbox).
+            WorldCommon.CreateBox("Bank", new Vector3(-8.5f, 1f, -2f), new Vector3(2.2f, 2f, 1.4f),
+                new Color(0.2f, 0.5f, 0.35f)).AddComponent<BankInteractable>();
+
             Vector3[] beds = { new Vector3(-7, 0.4f, -8), new Vector3(-2, 0.4f, -9), new Vector3(3, 0.4f, -9), new Vector3(8, 0.4f, -8) };
             for (int i = 0; i < beds.Length; i++)
             {

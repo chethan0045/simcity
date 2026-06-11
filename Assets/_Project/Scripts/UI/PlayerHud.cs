@@ -30,9 +30,9 @@ namespace Simcity.UI
 
             // Clock + money + debt (top-right)
             string clock = GameClock.Instance != null ? GameClock.Instance.TimeString() : "--";
-            string money = wallet != null ? $"{wallet.Coins} Coins" : "";
+            string money = wallet != null ? $"{wallet.Coins} Coins (cashable {wallet.CashableCoins})" : "";
             string debt = (housing != null && housing.Debt > 0) ? $"   ⚠ rent debt {housing.Debt}" : "";
-            GUI.Label(new Rect(Screen.width - 340, 10, 330, 24), $"{clock}     {money}{debt}", _style);
+            GUI.Label(new Rect(Screen.width - 460, 10, 450, 24), $"{clock}     {money}{debt}", _style);
 
             // Goods + reputation (second top-right line)
             if (inventory != null || seller != null)

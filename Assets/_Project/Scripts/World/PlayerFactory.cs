@@ -3,6 +3,7 @@ using Simcity.Player;
 using Simcity.Interaction;
 using Simcity.Stats;
 using Simcity.Economy;
+using Simcity.Economy.RealMoney;
 using Simcity.Social;
 using Simcity.UI;
 
@@ -54,6 +55,7 @@ namespace Simcity.World
             // Economy: hold crafted goods and a seller reputation.
             player.AddComponent<Inventory>();
             player.AddComponent<SellerProfile>();
+            player.AddComponent<RealMoneyService>(); // Phase 7 buy/cash-out (sandbox); requires Wallet
 
             var appear = player.AddComponent<CharacterAppearance>();
             appear.hideHeadForFirstPerson = true;
@@ -109,6 +111,7 @@ namespace Simcity.World
 
             player.AddComponent<Inventory>();
             player.AddComponent<SellerProfile>();
+            player.AddComponent<RealMoneyService>(); // Phase 7 buy/cash-out (sandbox); requires Wallet
 
             BuildHud(player);
         }

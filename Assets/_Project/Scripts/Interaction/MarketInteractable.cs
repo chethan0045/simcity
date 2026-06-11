@@ -34,7 +34,7 @@ namespace Simcity.Interaction
             int fee = Mathf.RoundToInt(gross * marketFee);
             int net = gross - fee;
 
-            wallet.Add(net);
+            wallet.AddSaleEarnings(net); // sale revenue is the only real-money-cashable Coins (Phase 7)
             seller?.RecordSale(net);
             inv.Clear();
 
