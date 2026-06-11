@@ -73,6 +73,20 @@ namespace Simcity.World
             hud.relationships = player.GetComponent<Relationships>();
             hud.inventory = player.GetComponent<Inventory>();
             hud.seller = player.GetComponent<SellerProfile>();
+
+            BuildClientUx();
+        }
+
+        /// <summary>Phase 8 client UX layer: settings (F10), first-run tutorial (F1), and touch
+        /// controls (auto-enabled on mobile). Global, spawned once — shared by solo and co-op.</summary>
+        public static void BuildClientUx()
+        {
+            if (Object.FindObjectOfType<SettingsScreen>() == null)
+                new GameObject("SettingsScreen").AddComponent<SettingsScreen>();
+            if (Object.FindObjectOfType<TutorialScreen>() == null)
+                new GameObject("TutorialScreen").AddComponent<TutorialScreen>();
+            if (Object.FindObjectOfType<Simcity.Player.MobileControls>() == null)
+                new GameObject("MobileControls").AddComponent<Simcity.Player.MobileControls>();
         }
 
         /// <summary>Phase 6: turn an already-spawned networked player object that THIS

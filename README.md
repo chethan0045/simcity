@@ -4,7 +4,7 @@ A grounded, co-op, first-person life simulation with a real player economy. See
 **[GAME_DESIGN.md](GAME_DESIGN.md)** for the full design and **PHASE0–5.md** for
 each build phase.
 
-## What's playable now (Phases 0–7, single-player)
+## What's playable now (Phases 0–8, single-player)
 Create a character → spawn into a small town of AI villagers → live an ordinary
 life: work or **craft & sell** for Coins, **eat / sleep / pay rent**, and **build
 relationships** (friendship → romance) with villagers who live their own lives. Visit
@@ -54,7 +54,8 @@ With any scene open (the template's `SampleScene` is fine), hit **Play**:
 2. You spawn into the **town**. Villagers walk around living their lives.
 
 **Controls:** `WASD` move · mouse look · `Shift` sprint · `Space` jump ·
-`E` interact · `Esc` free cursor (click to relock) · **F9** delete saved character.
+`E` interact · `Esc` free cursor (click to relock) · **F1** tutorial · **F10** settings ·
+**F9** delete saved character. (On mobile: on-screen joystick + look drag + Jump/E buttons.)
 
 **Try the full loop:**
 - **Workbench** → `E` to *Craft* goods · **Market** → `E` to *Sell* for Coins (rep rises)
@@ -78,17 +79,18 @@ most likely first-run culprits, already designed-around but worth knowing:
 ```
 Assets/_Project/Scripts/
   Bootstrap/   phase entry points (Phase6Bootstrap auto-runs today: solo, or co-op if enabled)
+  Common/      MaterialUtils, QualityManager (Phase 8 quality tiers)
   Core/        GameClock, SaveSystem
   Stats/       CharacterNeeds, AppearanceConfig, CharacterAppearance
-  Player/      FirstPersonController
+  Player/      FirstPersonController (game feel), MobileControls (touch)
   Interaction/ Interactable + Bed/Food/Work/Craft/Market/Npc interactables
   AI/          utility-AI villagers (NpcBrain, actions, mover)
   Social/      relationships, characters, social graph
   Economy/     Wallet (dual-currency), Inventory, ItemCatalog, SellerProfile, RealMoney/ (Phase 7 sandbox)
   World/       world builders (TownWorld, ApartmentWorld, CoopWorld) + shared helpers
   Net/         Phase 6 co-op (opt-in, #if SIMCITY_NETCODE): Relay/Lobby, networked player/NPC/clock
-  UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen
-GAME_DESIGN.md · PHASE0.md … PHASE7.md
+  UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen, Settings/Tutorial/Bank portal
+GAME_DESIGN.md · PHASE0.md … PHASE8.md
 ```
 
 ## Phase 6 — Co-op multiplayer (written; opt-in)
@@ -105,6 +107,12 @@ period, earned-only) enforced in code. **No real money moves** — the only paym
 provider is a mock; there's no backend, real KYC, or provider integration, and going
 live needs legal review. Walk to the **Bank** to try it. See **[PHASE7.md](PHASE7.md)**.
 
-## Next: Phase 8 — Realistic art & game feel
-Scalable-realism art pass (PBR, baked GI, LODs), character art/animation, audio, real
-UGUI/Canvas UI, mobile controls, tutorial, balancing (see `GAME_DESIGN.md` §12).
+## Phase 8 — Realistic art & game feel (code slice written)
+The polish pass's code-shaped half: scalable **quality tiers** + settings (**F10**), **mobile
+touch controls**, camera **game feel** (head-bob + sprint FOV), and a first-run **tutorial**
+(**F1**). The art/animation/audio/UGUI-reskin work needs Unity + assets and is checklisted in
+**[PHASE8.md](PHASE8.md)**.
+
+## Next: Phase 9 — Ship
+Mobile builds, backend/hosting, store prep (web evaluated) — the production track
+(see `GAME_DESIGN.md` §12).
