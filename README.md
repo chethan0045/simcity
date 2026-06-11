@@ -79,7 +79,8 @@ most likely first-run culprits, already designed-around but worth knowing:
 ```
 Assets/_Project/Scripts/
   Bootstrap/   phase entry points (Phase6Bootstrap auto-runs today: solo, or co-op if enabled)
-  Common/      MaterialUtils, QualityManager (Phase 8 quality tiers)
+  Common/      MaterialUtils, QualityManager (quality tiers), AppInfo (version)
+  Editor/      BuildScript (headless CI builds — Phase 9)
   Core/        GameClock, SaveSystem
   Stats/       CharacterNeeds, AppearanceConfig, CharacterAppearance
   Player/      FirstPersonController (game feel), MobileControls (touch)
@@ -90,7 +91,7 @@ Assets/_Project/Scripts/
   World/       world builders (TownWorld, ApartmentWorld, CoopWorld) + shared helpers
   Net/         Phase 6 co-op (opt-in, #if SIMCITY_NETCODE): Relay/Lobby, networked player/NPC/clock
   UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen, Settings/Tutorial/Bank portal
-GAME_DESIGN.md · PHASE0.md … PHASE8.md
+GAME_DESIGN.md · PHASE0.md … PHASE9.md
 ```
 
 ## Phase 6 — Co-op multiplayer (written; opt-in)
@@ -113,6 +114,13 @@ touch controls**, camera **game feel** (head-bob + sprint FOV), and a first-run 
 (**F1**). The art/animation/audio/UGUI-reskin work needs Unity + assets and is checklisted in
 **[PHASE8.md](PHASE8.md)**.
 
-## Next: Phase 9 — Ship
-Mobile builds, backend/hosting, store prep (web evaluated) — the production track
-(see `GAME_DESIGN.md` §12).
+## Phase 9 — Ship (tooling written; roadmap complete)
+Headless **build automation** (`Assets/_Project/Editor/BuildScript.cs`), a **CI workflow**
+(`.github/workflows/unity-build.yml`, Windows + Android via game-ci), and central app/version
+info. The rest of shipping is ops — store/signing/backend/compliance — laid out as a checklist
+in **[PHASE9.md](PHASE9.md)**.
+
+## The roadmap is drafted — now validate
+Phases 0–9 are all written **but never run in Unity**. The highest-value next step is not a new
+phase: it's opening the project, pressing Play, and fixing the first-run issues (see *Setup &
+validation* above). Paste me the Console errors and we'll work through them.

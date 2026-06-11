@@ -80,6 +80,7 @@ namespace Simcity.UI
             }
 
             GUILayout.FlexibleSpace();
+            GUILayout.Label(AppInfo.Label, _hint);
             if (GUILayout.Button("Close (F10)", GUILayout.Height(28))) Toggle();
             GUILayout.EndArea();
         }

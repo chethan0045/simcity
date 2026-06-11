@@ -1,0 +1,53 @@
+name: Build
+
+# Phase 9 ship pipeline (template). PREREQUISITES — this repo currently holds only
+# Assets/_Project + Packages; a real build also needs the FULL Unity project committed:
+#   • ProjectSettings/  (incl. ProjectVersion.txt — game-ci picks the editor version from it)
+#   • at least one scene added to Build Settings (the world builds procedurally at runtime)
+# and these repo secrets for the Unity license:
+#   UNITY_LICENSE (or UNITY_SERIAL), UNITY_EMAIL, UNITY_PASSWORD  — see https://game.ci
+# Until those exist, this workflow is a documented starting point, not a green build.
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    name: Build ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform: [StandaloneWindows64, Android]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+
+      - name: Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          BUILD_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || '0.0.0-dev' }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: Simcity
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build
