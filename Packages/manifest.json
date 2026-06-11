@@ -1,0 +1,14 @@
+{
+  "//": "REFERENCE manifest for the 'open this folder as a project' path. If you instead create a fresh URP 3D project in Unity Hub (recommended in README), Unity generates its own version-correct manifest and this file is not used. Package versions below target Unity 6 LTS (6000.0.x); Unity will resolve compatible versions on first open.",
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "17.0.3",
+    "com.unity.inputsystem": "1.8.2",
+    "com.unity.cinemachine": "2.10.1",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.textmeshpro": "3.0.7",
+    "com.unity.test-framework": "1.4.5",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.ui": "1.0.0"
+  }
+}
