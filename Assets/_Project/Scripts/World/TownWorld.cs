@@ -96,6 +96,23 @@ namespace Simcity.World
                     new Color(0.4f, 0.3f, 0.22f));
                 bench.AddComponent<Amenity>().type = AmenityType.Social;
             }
+
+            // Resource nodes — gather raw materials for crafting (deplete, regrow daily).
+            AddResource("Tree_1", new Vector3(-13, 1.2f, 10), new Vector3(1f, 2.4f, 1f), new Color(0.20f, 0.42f, 0.22f), "Wood", 6);
+            AddResource("Tree_2", new Vector3(13, 1.2f, 10), new Vector3(1f, 2.4f, 1f), new Color(0.20f, 0.42f, 0.22f), "Wood", 6);
+            AddResource("Rock_1", new Vector3(-13, 0.6f, -10), new Vector3(1.4f, 1.2f, 1.4f), new Color(0.5f, 0.5f, 0.52f), "Stone", 5);
+            AddResource("Rock_2", new Vector3(12, 0.6f, -11), new Vector3(1.4f, 1.2f, 1.4f), new Color(0.5f, 0.5f, 0.52f), "Stone", 5);
+            AddResource("Bush_1", new Vector3(-11, 0.5f, 12), new Vector3(1.2f, 1f, 1.2f), new Color(0.35f, 0.55f, 0.28f), "Fiber", 6);
+            AddResource("Bush_2", new Vector3(11, 0.5f, 12), new Vector3(1.2f, 1f, 1.2f), new Color(0.35f, 0.55f, 0.28f), "Fiber", 6);
+            AddResource("ClayPit", new Vector3(0, 0.4f, 13), new Vector3(2f, 0.8f, 2f), new Color(0.6f, 0.45f, 0.35f), "Clay", 5);
+        }
+
+        private static void AddResource(string name, Vector3 pos, Vector3 size, Color color, string materialId, int capacity)
+        {
+            var node = WorldCommon.CreateBox(name, pos, size, color);
+            var r = node.AddComponent<ResourceInteractable>();
+            r.materialId = materialId;
+            r.capacity = capacity;
         }
 
         private static void SpawnNpcs(int count)

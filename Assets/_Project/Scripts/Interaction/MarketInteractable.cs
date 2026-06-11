@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Simcity.Economy;
 
@@ -18,9 +19,14 @@ namespace Simcity.Interaction
             var wallet = interactor.GetComponent<Wallet>();
             if (inv == null || wallet == null) return;
 
-            if (inv.Total == 0)
+            // Only finished GOODS sell here — raw materials stay as crafting inputs.
+            var goods = new List<KeyValuePair<string, int>>();
+            foreach (var kv in inv.Items)
+                if (ItemCatalog.IsGood(kv.Key)) goods.Add(kv);
+
+            if (goods.Count == 0)
             {
-                Debug.Log("[Market] Nothing to sell — craft goods at the Workbench first.");
+                Debug.Log("[Market] No finished goods to sell — craft some at the Workbench first.");
                 return;
             }
 
@@ -28,7 +34,7 @@ namespace Simcity.Interaction
             float multiplier = seller != null ? seller.PriceMultiplier : 1f;
 
             int gross = 0;
-            foreach (var kv in inv.Items)
+            foreach (var kv in goods)
                 gross += Mathf.RoundToInt(ItemCatalog.Value(kv.Key) * kv.Value * multiplier);
 
             int fee = Mathf.RoundToInt(gross * marketFee);
@@ -36,7 +42,7 @@ namespace Simcity.Interaction
 
             wallet.AddSaleEarnings(net); // sale revenue is the only real-money-cashable Coins (Phase 7)
             seller?.RecordSale(net);
-            inv.Clear();
+            foreach (var kv in goods) inv.TryRemove(kv.Key, kv.Value);
 
             Debug.Log($"[Market] Sold goods for {net} Coins (gross {gross}, fee {fee}). " +
                       $"Reputation now {(seller != null ? seller.reputation : 0f):0}.");

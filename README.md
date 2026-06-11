@@ -58,7 +58,8 @@ With any scene open (the template's `SampleScene` is fine), hit **Play**:
 **F9** delete saved character. (On mobile: on-screen joystick + look drag + Jump/E buttons.)
 
 **Try the full loop:**
-- **Workbench** → `E` to *Craft* goods · **Market** → `E` to *Sell* for Coins (rep rises)
+- **Gather** at trees/rocks/bushes/clay (`E`) → **Workbench** → `E` to *Craft* goods by recipe ·
+  **Market** → `E` to *Sell* finished goods for Coins (rep rises). See **[CRAFTING.md](CRAFTING.md)**.
 - **Diner** → *Eat* · **Bed** → *Sleep* · **Workshop** → *Work* (quick Coins)
 - Walk up to a **villager** → `E` to *Talk* and build the relationship
 - Watch the HUD: needs, Coins, day/time, goods, reputation, and relationships
