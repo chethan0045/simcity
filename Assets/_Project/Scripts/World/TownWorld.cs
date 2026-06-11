@@ -20,10 +20,7 @@ namespace Simcity.World
 
         public static GameObject Build(AppearanceConfig playerAppearance)
         {
-            WorldCommon.EnsureLighting();
-            WorldCommon.EnsureClock();
-            BuildGround();
-            BuildStations();
+            BuildSharedEnvironment();
             new GameObject("SocialSystem").AddComponent<SocialSystem>();
             SpawnNpcs(7);
 
@@ -33,6 +30,17 @@ namespace Simcity.World
             Debug.Log("[TownWorld] Town built. Watch villagers eat/sleep/work/gather by time of day. " +
                       "You can use the Diner, Workshop, and Beds too.");
             return player;
+        }
+
+        /// <summary>Lighting + clock + ground + the (static, deterministic) facilities.
+        /// Everything here is identical on every machine, so Phase 6's co-op world builds
+        /// it locally on each client rather than syncing the geometry over the network.</summary>
+        public static void BuildSharedEnvironment()
+        {
+            WorldCommon.EnsureLighting();
+            WorldCommon.EnsureClock();
+            BuildGround();
+            BuildStations();
         }
 
         private static void BuildGround()

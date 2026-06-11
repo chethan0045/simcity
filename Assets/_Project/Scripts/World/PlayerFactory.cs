@@ -72,5 +72,56 @@ namespace Simcity.World
             hud.inventory = player.GetComponent<Inventory>();
             hud.seller = player.GetComponent<SellerProfile>();
         }
+
+        /// <summary>Phase 6: turn an already-spawned networked player object that THIS
+        /// machine owns into the full first-person rig (camera, input, needs, wallet, HUD).
+        /// The GameObject + CharacterController already exist (from the network prefab); we
+        /// add the local-only gameplay layer that must never run on a remote copy.
+        /// Appearance is applied separately by NetworkPlayer (it owns the synced look).</summary>
+        public static void OutfitNetworkedOwner(GameObject player, AppearanceConfig appearance)
+        {
+            foreach (var cam in Object.FindObjectsOfType<Camera>()) cam.gameObject.SetActive(false);
+            foreach (var listener in Object.FindObjectsOfType<AudioListener>()) listener.enabled = false;
+
+            var fpc = player.AddComponent<FirstPersonController>();
+
+            var camGo = new GameObject("PlayerCamera");
+            camGo.tag = "MainCamera";
+            camGo.transform.SetParent(player.transform);
+            camGo.transform.localPosition = new Vector3(0f, 1.6f, 0f);
+            camGo.AddComponent<Camera>();
+            camGo.AddComponent<AudioListener>();
+            fpc.SetCamera(camGo.transform);
+
+            var interactor = player.AddComponent<PlayerInteractor>();
+            interactor.rayOrigin = camGo.transform;
+
+            player.AddComponent<CharacterNeeds>();
+            player.AddComponent<Wallet>();   // Housing requires Wallet — add first.
+            player.AddComponent<Housing>();
+            player.AddComponent<DevTools>();
+
+            player.AddComponent<Relationships>();
+            var character = player.AddComponent<Character>();
+            character.isPlayer = true;
+            character.sociability = 0.6f;
+            character.displayName = string.IsNullOrWhiteSpace(appearance?.characterName) ? "You" : appearance.characterName;
+
+            player.AddComponent<Inventory>();
+            player.AddComponent<SellerProfile>();
+
+            BuildHud(player);
+        }
+
+        /// <summary>Phase 6: a player object owned by SOMEONE ELSE — just an avatar with a
+        /// social identity so we can target them (Talk, gift). No needs/wallet/HUD: those
+        /// are simulated on the owning machine and replicated, not run here.</summary>
+        public static void OutfitNetworkedRemote(GameObject player, AppearanceConfig appearance)
+        {
+            player.AddComponent<Relationships>();
+            var character = player.AddComponent<Character>();
+            character.isPlayer = false; // not THIS machine's player
+            character.displayName = string.IsNullOrWhiteSpace(appearance?.characterName) ? "Friend" : appearance.characterName;
+        }
     }
 }

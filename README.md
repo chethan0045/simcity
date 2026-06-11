@@ -75,7 +75,7 @@ most likely first-run culprits, already designed-around but worth knowing:
 ## Project layout
 ```
 Assets/_Project/Scripts/
-  Bootstrap/   phase entry points (Phase3Bootstrap auto-runs the town today)
+  Bootstrap/   phase entry points (Phase6Bootstrap auto-runs today: solo, or co-op if enabled)
   Core/        GameClock, SaveSystem
   Stats/       CharacterNeeds, AppearanceConfig, CharacterAppearance
   Player/      FirstPersonController
@@ -83,11 +83,19 @@ Assets/_Project/Scripts/
   AI/          utility-AI villagers (NpcBrain, actions, mover)
   Social/      relationships, characters, social graph
   Economy/     Wallet, Inventory, ItemCatalog, SellerProfile
-  World/       world builders (TownWorld, ApartmentWorld) + shared helpers
-  UI/          PlayerHud, CharacterCreationScreen
-GAME_DESIGN.md · PHASE0.md … PHASE5.md
+  World/       world builders (TownWorld, ApartmentWorld, CoopWorld) + shared helpers
+  Net/         Phase 6 co-op (opt-in, #if SIMCITY_NETCODE): Relay/Lobby, networked player/NPC/clock
+  UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen
+GAME_DESIGN.md · PHASE0.md … PHASE6.md
 ```
 
-## Next (after validation): Phase 6 — Co-op multiplayer
-Netcode for GameObjects + Relay + Lobby. Big complexity jump — validate this
-single-player slice first.
+## Phase 6 — Co-op multiplayer (written; opt-in)
+Netcode for GameObjects + Relay + Lobby: a friend hosts, others join with a code, and
+players/villagers/clock sync. It's **off by default** — the repo still compiles and plays
+single-player with zero netcode setup. Turn it on (packages + the `SIMCITY_NETCODE` define)
+per **[PHASE6.md](PHASE6.md)**. Still a big complexity jump — validate the single-player
+slice above first.
+
+## Next: Phase 7 — Real-money layer
+Backend wallet, payments provider, cash-out of earned Coins, KYC/compliance — its own
+track with legal review (see `GAME_DESIGN.md` §6.3).
