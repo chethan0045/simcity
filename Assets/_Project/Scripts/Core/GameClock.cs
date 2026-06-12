@@ -22,6 +22,10 @@ namespace Simcity.Core
         [Tooltip("Optional directional light rotated to fake a day/night cycle.")]
         public Light sun;
 
+        [Tooltip("When false, an external system drives time (e.g. Phase 6's NetworkClock " +
+                 "on co-op clients) and the clock won't advance on its own.")]
+        public bool autoAdvance = true;
+
         public int Day { get; private set; } = 1;
         public float Hour { get; private set; }        // 0..24
         public float NormalizedTime => Hour / 24f;     // 0..1
@@ -50,10 +54,19 @@ namespace Simcity.Core
 
         private void Update()
         {
-            AdvanceMinutes(_minutesPerSecond * Time.deltaTime);
+            if (autoAdvance)
+                AdvanceMinutes(_minutesPerSecond * Time.deltaTime);
 
             if (sun != null) // sunrise ~6:00, noon overhead, sunset ~18:00
                 sun.transform.rotation = Quaternion.Euler((NormalizedTime * 360f) - 90f, -30f, 0f);
+        }
+
+        /// <summary>Force the clock to a specific day/hour without firing events — used by
+        /// co-op clients to mirror the server's authoritative time (see NetworkClock).</summary>
+        public void SetTime(int day, float hour)
+        {
+            Day = Mathf.Max(1, day);
+            Hour = Mathf.Repeat(hour, 24f);
         }
 
         /// <summary>Advance the clock by in-game minutes (live or via a skip).</summary>

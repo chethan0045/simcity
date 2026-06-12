@@ -26,7 +26,8 @@ namespace Simcity.Interaction
             if (Physics.Raycast(origin.position, origin.forward, out RaycastHit hit, range))
                 _focus = hit.collider.GetComponentInParent<Interactable>();
 
-            if (_focus != null && Input.GetKeyDown(interactKey))
+            bool pressed = Input.GetKeyDown(interactKey) || Simcity.Player.MobileControls.ConsumeInteract();
+            if (_focus != null && pressed)
                 _focus.Interact(gameObject);
         }
 

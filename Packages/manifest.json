@@ -1,5 +1,6 @@
 {
   "//": "REFERENCE manifest for the 'open this folder as a project' path. If you instead create a fresh URP 3D project in Unity Hub (recommended in README), Unity generates its own version-correct manifest and this file is not used. Package versions below target Unity 6 LTS (6000.0.x); Unity will resolve compatible versions on first open.",
+  "//netcode": "The com.unity.netcode.gameobjects + com.unity.services.* packages below power Phase 6 (co-op). They are OPTIONAL: the single-player game (Phases 0-5) compiles and runs without them. To enable co-op, keep these and add the scripting define SIMCITY_NETCODE (Project Settings > Player > Scripting Define Symbols). See PHASE6.md.",
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
@@ -17,6 +18,7 @@
     "com.unity.test-framework": "1.6.0",
     "com.unity.timeline": "1.8.12",
     "com.unity.ugui": "2.0.0",
+<<<<<<< HEAD
     "com.unity.xr.legacyinputhelpers": "3.0.1",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.adaptiveperformance": "1.0.0",
@@ -24,6 +26,15 @@
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
+=======
+    "com.unity.textmeshpro": "3.0.7",
+    "com.unity.test-framework": "1.4.5",
+    "com.unity.netcode.gameobjects": "2.1.1",
+    "com.unity.services.core": "1.12.5",
+    "com.unity.services.authentication": "3.3.3",
+    "com.unity.services.relay": "1.1.1",
+    "com.unity.services.lobbies": "1.2.2",
+>>>>>>> 5369605c905e87c3db7af6b95b04e1aba60313d6
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.cloth": "1.0.0",
     "com.unity.modules.director": "1.0.0",

@@ -4,10 +4,12 @@ A grounded, co-op, first-person life simulation with a real player economy. See
 **[GAME_DESIGN.md](GAME_DESIGN.md)** for the full design and **PHASE0–5.md** for
 each build phase.
 
-## What's playable now (Phases 0–5, single-player)
+## What's playable now (Phases 0–8, single-player)
 Create a character → spawn into a small town of AI villagers → live an ordinary
 life: work or **craft & sell** for Coins, **eat / sleep / pay rent**, and **build
-relationships** (friendship → romance) with villagers who live their own lives.
+relationships** (friendship → romance) with villagers who live their own lives. Visit
+the **Bank** to try the Phase 7 buy/cash-out flow (**sandbox — no real money**). Co-op
+(Phase 6) and the real-money layer (Phase 7) are described in their phase docs.
 
 > ⚠️ **Status: written but not yet run.** All code below was authored without a
 > Unity install on the dev machine. This guide is about getting it running and
@@ -52,10 +54,12 @@ With any scene open (the template's `SampleScene` is fine), hit **Play**:
 2. You spawn into the **town**. Villagers walk around living their lives.
 
 **Controls:** `WASD` move · mouse look · `Shift` sprint · `Space` jump ·
-`E` interact · `Esc` free cursor (click to relock) · **F9** delete saved character.
+`E` interact · `Esc` free cursor (click to relock) · **F1** tutorial · **F10** settings ·
+**F9** delete saved character. (On mobile: on-screen joystick + look drag + Jump/E buttons.)
 
 **Try the full loop:**
-- **Workbench** → `E` to *Craft* goods · **Market** → `E` to *Sell* for Coins (rep rises)
+- **Gather** at trees/rocks/bushes/clay (`E`) → **Workbench** → `E` to *Craft* goods by recipe ·
+  **Market** → `E` to *Sell* finished goods for Coins (rep rises). See **[CRAFTING.md](CRAFTING.md)**.
 - **Diner** → *Eat* · **Bed** → *Sleep* · **Workshop** → *Work* (quick Coins)
 - Walk up to a **villager** → `E` to *Talk* and build the relationship
 - Watch the HUD: needs, Coins, day/time, goods, reputation, and relationships
@@ -75,19 +79,49 @@ most likely first-run culprits, already designed-around but worth knowing:
 ## Project layout
 ```
 Assets/_Project/Scripts/
-  Bootstrap/   phase entry points (Phase3Bootstrap auto-runs the town today)
+  Bootstrap/   phase entry points (Phase6Bootstrap auto-runs today: solo, or co-op if enabled)
+  Common/      MaterialUtils, QualityManager (quality tiers), AppInfo (version)
+  Editor/      BuildScript (headless CI builds — Phase 9)
   Core/        GameClock, SaveSystem
   Stats/       CharacterNeeds, AppearanceConfig, CharacterAppearance
-  Player/      FirstPersonController
+  Player/      FirstPersonController (game feel), MobileControls (touch)
   Interaction/ Interactable + Bed/Food/Work/Craft/Market/Npc interactables
   AI/          utility-AI villagers (NpcBrain, actions, mover)
   Social/      relationships, characters, social graph
-  Economy/     Wallet, Inventory, ItemCatalog, SellerProfile
-  World/       world builders (TownWorld, ApartmentWorld) + shared helpers
-  UI/          PlayerHud, CharacterCreationScreen
-GAME_DESIGN.md · PHASE0.md … PHASE5.md
+  Economy/     Wallet (dual-currency), Inventory, ItemCatalog, SellerProfile, RealMoney/ (Phase 7 sandbox)
+  World/       world builders (TownWorld, ApartmentWorld, CoopWorld) + shared helpers
+  Net/         Phase 6 co-op (opt-in, #if SIMCITY_NETCODE): Relay/Lobby, networked player/NPC/clock
+  UI/          PlayerHud, CharacterCreationScreen, CoopMenuScreen, Settings/Tutorial/Bank portal
+GAME_DESIGN.md · PHASE0.md … PHASE9.md
 ```
 
-## Next (after validation): Phase 6 — Co-op multiplayer
-Netcode for GameObjects + Relay + Lobby. Big complexity jump — validate this
-single-player slice first.
+## Phase 6 — Co-op multiplayer (written; opt-in)
+Netcode for GameObjects + Relay + Lobby: a friend hosts, others join with a code, and
+players/villagers/clock sync. It's **off by default** — the repo still compiles and plays
+single-player with zero netcode setup. Turn it on (packages + the `SIMCITY_NETCODE` define)
+per **[PHASE6.md](PHASE6.md)**. Still a big complexity jump — validate the single-player
+slice above first.
+
+## Phase 7 — Real-money layer (written; **sandbox**)
+Dual-currency wallet (earned-by-selling = cashable; purchased/granted = not) with the
+buy → verify → cash-out flow and all the compliance gates (KYC, age, threshold, holding
+period, earned-only) enforced in code. **No real money moves** — the only payments
+provider is a mock; there's no backend, real KYC, or provider integration, and going
+live needs legal review. Walk to the **Bank** to try it. See **[PHASE7.md](PHASE7.md)**.
+
+## Phase 8 — Realistic art & game feel (code slice written)
+The polish pass's code-shaped half: scalable **quality tiers** + settings (**F10**), **mobile
+touch controls**, camera **game feel** (head-bob + sprint FOV), and a first-run **tutorial**
+(**F1**). The art/animation/audio/UGUI-reskin work needs Unity + assets and is checklisted in
+**[PHASE8.md](PHASE8.md)**.
+
+## Phase 9 — Ship (tooling written; roadmap complete)
+Headless **build automation** (`Assets/_Project/Editor/BuildScript.cs`), a **CI workflow**
+(`.github/workflows/unity-build.yml`, Windows + Android via game-ci), and central app/version
+info. The rest of shipping is ops — store/signing/backend/compliance — laid out as a checklist
+in **[PHASE9.md](PHASE9.md)**.
+
+## The roadmap is drafted — now validate
+Phases 0–9 are all written **but never run in Unity**. The highest-value next step is not a new
+phase: it's opening the project, pressing Play, and fixing the first-run issues (see *Setup &
+validation* above). Paste me the Console errors and we'll work through them.

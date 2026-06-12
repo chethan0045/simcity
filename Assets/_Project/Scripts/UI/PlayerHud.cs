@@ -30,21 +30,28 @@ namespace Simcity.UI
 
             // Clock + money + debt (top-right)
             string clock = GameClock.Instance != null ? GameClock.Instance.TimeString() : "--";
-            string money = wallet != null ? $"{wallet.Coins} Coins" : "";
+            string money = wallet != null ? $"{wallet.Coins} Coins (cashable {wallet.CashableCoins})" : "";
             string debt = (housing != null && housing.Debt > 0) ? $"   ⚠ rent debt {housing.Debt}" : "";
-            GUI.Label(new Rect(Screen.width - 340, 10, 330, 24), $"{clock}     {money}{debt}", _style);
+            GUI.Label(new Rect(Screen.width - 460, 10, 450, 24), $"{clock}     {money}{debt}", _style);
 
-            // Goods + reputation (second top-right line)
+            // Goods + reputation (line 2) and materials (line 3), top-right.
             if (inventory != null || seller != null)
             {
-                var sb = new StringBuilder();
+                var goods = new StringBuilder("Goods: ");
+                var mats = new StringBuilder("Materials: ");
+                int gc = 0, mc = 0;
                 if (inventory != null)
-                {
-                    sb.Append($"Goods: {inventory.Total}");
-                    foreach (var kv in inventory.Items) sb.Append($"  {kv.Key}×{kv.Value}");
-                }
-                if (seller != null) sb.Append($"   Rep: {seller.reputation:0}");
-                GUI.Label(new Rect(Screen.width - 460, 32, 450, 22), sb.ToString(), _style);
+                    foreach (var kv in inventory.Items)
+                    {
+                        if (ItemCatalog.IsGood(kv.Key)) { goods.Append($"{kv.Key}×{kv.Value} "); gc += kv.Value; }
+                        else { mats.Append($"{kv.Key}×{kv.Value} "); mc += kv.Value; }
+                    }
+                if (gc == 0) goods.Append("—");
+                if (mc == 0) mats.Append("—");
+                if (seller != null) goods.Append($"    Rep: {seller.reputation:0}");
+
+                GUI.Label(new Rect(Screen.width - 460, 32, 450, 22), goods.ToString(), _style);
+                if (inventory != null) GUI.Label(new Rect(Screen.width - 460, 52, 450, 22), mats.ToString(), _style);
             }
 
             // Need bars (top-left, below PlayerInteractor's controls hint)

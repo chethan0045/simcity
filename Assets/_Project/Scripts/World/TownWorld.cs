@@ -20,10 +20,7 @@ namespace Simcity.World
 
         public static GameObject Build(AppearanceConfig playerAppearance)
         {
-            WorldCommon.EnsureLighting();
-            WorldCommon.EnsureClock();
-            BuildGround();
-            BuildStations();
+            BuildSharedEnvironment();
             new GameObject("SocialSystem").AddComponent<SocialSystem>();
             SpawnNpcs(7);
 
@@ -33,6 +30,17 @@ namespace Simcity.World
             Debug.Log("[TownWorld] Town built. Watch villagers eat/sleep/work/gather by time of day. " +
                       "You can use the Diner, Workshop, and Beds too.");
             return player;
+        }
+
+        /// <summary>Lighting + clock + ground + the (static, deterministic) facilities.
+        /// Everything here is identical on every machine, so Phase 6's co-op world builds
+        /// it locally on each client rather than syncing the geometry over the network.</summary>
+        public static void BuildSharedEnvironment()
+        {
+            WorldCommon.EnsureLighting();
+            WorldCommon.EnsureClock();
+            BuildGround();
+            BuildStations();
         }
 
         private static void BuildGround()
@@ -68,6 +76,10 @@ namespace Simcity.World
             WorldCommon.CreateBox("Market", new Vector3(-5.5f, 1f, -2f), new Vector3(2.4f, 2f, 1.4f),
                 new Color(0.3f, 0.6f, 0.5f)).AddComponent<MarketInteractable>().prompt = "Sell goods";
 
+            // Bank: the (web) money portal — buy Coins / cash out earned Coins (Phase 7, sandbox).
+            WorldCommon.CreateBox("Bank", new Vector3(-8.5f, 1f, -2f), new Vector3(2.2f, 2f, 1.4f),
+                new Color(0.2f, 0.5f, 0.35f)).AddComponent<BankInteractable>();
+
             Vector3[] beds = { new Vector3(-7, 0.4f, -8), new Vector3(-2, 0.4f, -9), new Vector3(3, 0.4f, -9), new Vector3(8, 0.4f, -8) };
             for (int i = 0; i < beds.Length; i++)
             {
@@ -84,6 +96,23 @@ namespace Simcity.World
                     new Color(0.4f, 0.3f, 0.22f));
                 bench.AddComponent<Amenity>().type = AmenityType.Social;
             }
+
+            // Resource nodes — gather raw materials for crafting (deplete, regrow daily).
+            AddResource("Tree_1", new Vector3(-13, 1.2f, 10), new Vector3(1f, 2.4f, 1f), new Color(0.20f, 0.42f, 0.22f), "Wood", 6);
+            AddResource("Tree_2", new Vector3(13, 1.2f, 10), new Vector3(1f, 2.4f, 1f), new Color(0.20f, 0.42f, 0.22f), "Wood", 6);
+            AddResource("Rock_1", new Vector3(-13, 0.6f, -10), new Vector3(1.4f, 1.2f, 1.4f), new Color(0.5f, 0.5f, 0.52f), "Stone", 5);
+            AddResource("Rock_2", new Vector3(12, 0.6f, -11), new Vector3(1.4f, 1.2f, 1.4f), new Color(0.5f, 0.5f, 0.52f), "Stone", 5);
+            AddResource("Bush_1", new Vector3(-11, 0.5f, 12), new Vector3(1.2f, 1f, 1.2f), new Color(0.35f, 0.55f, 0.28f), "Fiber", 6);
+            AddResource("Bush_2", new Vector3(11, 0.5f, 12), new Vector3(1.2f, 1f, 1.2f), new Color(0.35f, 0.55f, 0.28f), "Fiber", 6);
+            AddResource("ClayPit", new Vector3(0, 0.4f, 13), new Vector3(2f, 0.8f, 2f), new Color(0.6f, 0.45f, 0.35f), "Clay", 5);
+        }
+
+        private static void AddResource(string name, Vector3 pos, Vector3 size, Color color, string materialId, int capacity)
+        {
+            var node = WorldCommon.CreateBox(name, pos, size, color);
+            var r = node.AddComponent<ResourceInteractable>();
+            r.materialId = materialId;
+            r.capacity = capacity;
         }
 
         private static void SpawnNpcs(int count)
